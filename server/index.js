@@ -35,3 +35,30 @@ app.get('/todolist', async (req, res) => {
         res.json({message: err})
     }
 })
+
+app.delete('/todolist/:id', async (req, res) => {
+    try {
+        const {id} = req.params
+        const deletedTodo = await pool.query(
+            `DELETE FROM todos WHERE id = $1`,
+            [id]
+        )
+        res.send(deletedTodo.rows)
+    } catch (err) {
+        res.json({message: err})
+    }
+})
+
+app.put('/todolist/:id', async (req, res) => {
+    try {
+        const {id} = req.params
+        const {description} = req.body
+        const updatedTodo = await pool.query(
+            `UPDATE todos SET description = $1 WHERE id = $2 RETURNING *`,
+            [description, id]
+        )
+        res.send(updatedTodo)
+    } catch (err) {
+        res.json({message: err})
+    }
+})

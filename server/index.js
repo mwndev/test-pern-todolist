@@ -40,7 +40,7 @@ app.delete('/todolist/:id', async (req, res) => {
     try {
         const {id} = req.params
         const deletedTodo = await pool.query(
-            `DELETE FROM todos WHERE id = $1`,
+            `DELETE FROM todos WHERE id = $1 RETURNING *`,
             [id]
         )
         res.send(deletedTodo.rows)
